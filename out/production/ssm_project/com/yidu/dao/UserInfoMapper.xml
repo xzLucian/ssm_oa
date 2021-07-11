@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yidu.dao.UserInfoMapper">
+    <insert id="insertUser" parameterType="UserInfo">
+        insert into userInfo (userid, username, userpass, sex, birthday, departmentid, telephone, address, email,
+                              entertime, salary)
+        values (null, #{username}, 123123, #{sex}, #{birthday}, #{departmentid}, #{telephone}, #{address},
+                #{email}, #{entertime}, #{salary})
+    </insert>
+
+    <insert id="batchAddUser" parameterType="UserInfo">
+        insert into userInfo (userid, username, userpass, sex, birthday, departmentid, telephone, address, email,
+                              entertime, salary)
+        values (null, #{username}, #{userpass}, #{sex}, #{birthday}, #{departmentid}, #{telephone}, #{address},
+                #{email}, #{entertime}, #{salary})
+    </insert>
+    <select id="getUser" resultType="Userinfo">
+        select * from userInfo where userid = #{userid}
+    </select>
+    <select id="userLogin" parameterType="UserInfo" resultType="UserInfo">
+        select *
+        from userInfo
+        where username = #{username}
+          and userpass = #{userpass}
+    </select>
+    <select id="selectRole" parameterType="_int" resultType="int">
+        SELECT s2.roleid
+        FROM userRole s1,
+             Roleinfo s2,
+             userinfo s3
+        WHERE s3.`userid` = #{userid}
+          AND s3.`userid` = s1.`userid`
+          AND s1.`roleid` = s2.`roleid`;
+    </select>
+    <select id="selectRoleAll" resultType="Roleinfo">
+        select *
+        from roleinfo
+    </select>
+    <update id="updateRole" parameterType="int">
+        UPDATE userRole
+        SET roleid=#{roleids}
+        WHERE userid = #{userids}
+    </update>
+    <select id="selectMenuByRole" parameterType="integer" resultType="Menuinfo">
+        SELECT *
+        FROM menuinfo m1
+        WHERE m1.`menuid` IN (
+            SELECT r1.`menuid`
+            FROM rolemenu r1,
+                 Roleinfo r2
+            WHERE r2.`roleid` = #{roleid}
+              AND r1.`roleid` = r2.`roleid`)
+    </select>
+    <delete id="deleteMenuByRoleid" parameterType="Integer">
+        delete
+        from rolemenu
+        where roleid = #{roleid}
+    </delete>
+    <insert id="insertMenu" parameterType="map">
+        insert into rolemenu (roleid,menuid) values
+        <foreach collection="menuid" item="item" index="index" separator=",">
+            (#{roleid},#{item.menuid})
+        </foreach>
+    </insert>
+    <select id="queryAllUser" resultType="UserInfo" parameterType="map">
+        select * from userinfo where username LIKE trim(replace(CONCAT('%',#{name},'%'),' ',''))order by userid desc
+        <if test="page !=null and limit !=null">
+            limit #{page} , #{limit}
+        </if>
+    </select>
+    <select id="queryAllRows" resultType="int">
+        select count(userid)
+        from userinfo
+    </select>
+
+    <update id="userUpdate" parameterType="UserInfo">
+        update userinfo
+        set username=#{username},
+            sex=#{sex},
+            birthday=#{birthday},
+            departmentid=#{departmentid},
+            telephone=#{telephone},
+            address=#{address},
+            email=#{email},
+            entertime=#{entertime},
+            salary=#{salary}
+        where userid = #{userid}
+    </update>
+
+    <select id="selectDepNameByDepId" parameterType="int" resultType="java.lang.String">
+        select departmentname
+        from department
+        where departmentid = #{departmentid}
+    </select>
+
+    <select id="selectRoleNameByRoleId" parameterType="int" resultType="java.lang.String">
+        select rolename
+        from roleinfo
+        where roleid = #{roleid}
+    </select>
+    <update id="updateUserState" parameterType="int">
+        update userinfo
+        set state=#{state}
+        where userid = #{userid}
+    </update>
+    <delete id="deleteUser" parameterType="int">
+        delete
+        from userinfo
+        where userid = #{userid}
+    </delete>
+    <update id="insertImage">
+        update userinfo set imageurl=#{imageurl} where userid=#{userid}
+    </update>
+
+    <update id="updatePassword">
+        update userinfo set userpass=#{userpass} where userid=#{userid}
+    </update>
+</mapper>

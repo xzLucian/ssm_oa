@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        https://www.springframework.org/schema/mvc/spring-mvc.xsd
+         http://www.springframework.org/schema/context
+         https://www.springframework.org/schema/context/spring-context.xsd">
+    <!--默认会帮我们注册默认处理请求，参数和返回值的类-->
+    <mvc:annotation-driven>
+        <!--消息转换器，解决ResponseBody响应中文乱码-->
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes" value="text/html;charset=UTF-8"/>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <!-- 让Spring MVC不处理静态资源 -->
+    <mvc:default-servlet-handler/>
+    <!-- 自动扫描包，让指定包下的注解生效,由IOC容器统一管理 -->
+    <!--使用注解 组件扫描-->
+    <context:component-scan base-package="com.yidu"/>
+    <!--加载mysql的配置文件-->
+    <context:property-placeholder location="classpath:mysql.properties"/>
+    <!--文件上传-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设置上传文件的最大尺寸为10MB -->
+        <property name="maxUploadSize">
+            <value>104857600</value>
+        </property>
+        <property name="maxInMemorySize">
+            <value>4096</value>
+        </property>
+        <!--设置编码，与jsp页面编码一致-->
+        <property name="defaultEncoding">
+            <value>UTF-8</value>
+        </property>
+    </bean>
+    <!--配置数据库连接池-->
+    <bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+    <!-- 配置SqlSessionFactory对象 -->
+    <bean name="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--配置实体类别名包地址 mapper.xml中则只需要写类名不要前缀-->
+        <property name="typeAliasesPackage" value="com.yidu.bean"/>
+        <!-- 注入数据库连接池 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!--配置接口映射文件-->
+        <!--<property name="mapperLocations" value="classpath:com/yidu/dao/StudentMapper.xml" ref=""/>
+        <property name="mapperLocations" value="classpath:com/yidu/dao/ExpressCompanyMapper.xml"/>-->
+        <property name="mapperLocations" value="classpath:com/yidu/dao/*.xml"/>
+    </bean>
+    <!--接口映射代理-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer" name="scannerConfigurer">
+        <!--配置接口包地址-->
+        <property name="basePackage" value="com.yidu.dao"/>
+    </bean>
+    <!--配置拦截器-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/*"/><!--拦截的地址 user_login user_*-->
+            <mvc:exclude-mapping path="/login.html"/><!--要放行的地址(白名单) -->
+            <mvc:exclude-mapping path="/user_login"/><!--要放行的地址(白名单) -->
+            <mvc:exclude-mapping path="/admins"/><!--要放行的地址(白名单) -->
+            <bean class="com.yidu.interceptor.MyInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+</beans>

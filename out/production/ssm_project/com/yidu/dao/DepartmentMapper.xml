@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yidu.dao.DepartmentMapper">
+
+<!--查询所有部门-->
+    <select id="selectDepartmentAll" resultType="Departmentinfo">
+        select * from department
+    </select>
+    <!--查询所有部门包含搜索-->
+    <select id="queryAllDep" resultType="Departmentinfo" parameterType="map">
+        select * from department where departmentname LIKE trim(replace(CONCAT('%',#{name},'%'),' ',''))
+        <if test="page !=null and limit !=null">
+            limit #{page} , #{limit}
+        </if>
+    </select>
+    <select id="queryAllRows" resultType="int">
+        select count(departmentid) from department
+    </select>
+    <insert id="insertDept" parameterType="Departmentinfo">
+        insert into department (departmentid,departmentname,departmentphone,departmentnumber) values (null,#{departmentname},#{departmentphone},#{departmentnumber})
+    </insert>
+    <update id="updateDept"  parameterType="Departmentinfo">
+        update department set departmentname=#{departmentname},departmentphone=#{departmentphone},departmentnumber=#{departmentnumber} where departmentid=#{departmentid}
+    </update>
+    <delete id="deleteDept" parameterType="int">
+        delete from department where departmentid = #{departmentid}
+    </delete>
+</mapper>

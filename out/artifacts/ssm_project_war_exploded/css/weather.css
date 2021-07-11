@@ -1,0 +1,147 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+/* 今日天气样式 */
+.information {
+    position: absolute;
+
+}
+
+.now {
+    position: relative;
+    left: 50px;
+    top: 40px;
+    width: 550px;
+    height: 450px;
+    border-radius: 50px;
+    background: #e6eef4;
+    box-shadow: 20px 20px 60px #c4cacf,
+        -20px -20px 60px #ffffff;
+}
+
+/* 城市名字样式 */
+.city {
+    position: relative;
+    left: 300px;
+    top: 40px;
+    font-size: 35px;
+    display: block;
+    width: 200px;
+    height: 50px;
+    text-align: center;
+    border-radius: 30px;
+    box-shadow: 18px 18px 30px rgba(0, 0, 0, 0.1),
+        -18px -18px 30px rgba(255, 255, 255, 1);
+}
+
+/* 今日天气样式 */
+.text {
+    position: relative;
+    font-size: 30px;
+    left: 310px;
+    top: 70px;
+    display: inline-block;
+    width: 180px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    box-shadow: 18px 18px 30px rgba(0, 0, 0, 0.1),
+        -18px -18px 30px rgba(255, 255, 255, 1);
+    border-radius: 30px;
+}
+
+/* 天气图标样式 */
+.weatherDiv {
+    position: relative;
+    left: 70px;
+    top: -60px;
+    width: 150px;
+    height: 150px;
+    border-radius: 70px;
+    box-shadow: 18px 18px 30px rgba(0, 0, 0, 0.1),
+        -18px -18px 30px rgba(255, 255, 255, 1);
+}
+.weatherDiv:hover{
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.2),
+        0px 0px 0px rgba(255, 255, 255, 0.8),
+        inset 18px 18px 30px rgba(0, 0, 0, 0.1),
+        inset -18px -18px 30px rgba(255, 255, 255, 1);
+    transition: box-shadow .2s ease-out;
+}
+.weather{
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 天气信息样式 */
+.container {
+    width: 560px;
+    position: relative;
+    top: -50px;
+}
+
+/* 信息图标显示样式 */
+.container .box {
+    display: flex;
+    float: left;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    width: 100px;
+    height: 100px;
+    margin: 20px;
+}
+
+.container .box .img {
+    /* width: 100px; */
+    width: 78px;
+    height: 100px;
+    box-shadow: 18px 18px 30px rgba(0, 0, 0, 0.1),
+        -18px -18px 30px rgba(255, 255, 255, 1);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #efeeee;
+    transition: box-shadow .2s ease-out;
+    position: relative;
+}
+
+.container .box .img:hover {
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.2),
+        0px 0px 0px rgba(255, 255, 255, 0.8),
+        inset 18px 18px 30px rgba(0, 0, 0, 0.1),
+        inset -18px -18px 30px rgba(255, 255, 255, 1);
+    transition: box-shadow .2s ease-out;
+}
+
+/* 天气预测样式 */
+.forecast {
+    position: relative;
+    top: 550px;
+    left: 70px;
+    width: 500px;
+    background-color: rgba(0, 0, 0, .3);
+    margin: 0 0.2rem;
+    border-radius: 20px;
+}
+.forecast-situation img{
+    width: 30px;
+    height: 30px;
+
+}
+.forecast-item {
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.forecast-temp {
+    line-height: 40px;
+}

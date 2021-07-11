@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yidu.dao.HolidayMapper">
+
+    <!--查询所有申请表-->
+    <select id="selectHolidayAll" resultType="Holidayinfo">
+        select * from holiday
+    </select>
+    <!--查询所有申请表包含搜索-->
+    <select id="queryAllHoliday" resultType="Holidayinfo" parameterType="map">
+        select * from holiday where username LIKE trim(replace(CONCAT('%',#{name},'%'),' ',''))
+        <if test="page !=null and limit !=null">
+            limit #{page} , #{limit}
+        </if>
+    </select>
+
+    <select id="queryAllRows" resultType="int">
+        select count(id) from holiday
+    </select>
+
+    <update id="updateApply">
+        update holiday set state = #{state} where id=#{id}
+    </update>
+
+    <insert id="insertApply" parameterType="Holidayinfo">
+    insert into holiday (id,userid,username,departmentid,type,reason,starttime,endtime,totaltime) values (null,#{userid},#{username},#{departmentid},#{type},#{reason},#{starttime},#{endtime},#{totaltime})
+    </insert>
+
+    <update id="updateTable" parameterType="Holidayinfo">
+        update holiday set starttime=#{starttime},endtime=#{endtime},type=#{type},reason=#{reason},totaltime=#{totaltime} where id=#{id}
+    </update>
+
+    <!--查询所有申请表包含搜索-->
+    <select id="queryAllHolidayInDept" resultType="Holidayinfo" parameterType="map">
+        select * from holiday where userid!=#{userid} and departmentid=#{departmentid} and username LIKE trim(replace(CONCAT('%',#{name},'%'),' ','')) ORDER BY FIELD(state, 0, 1, 2)
+        <if test="page !=null and limit !=null">
+            limit #{page} , #{limit}
+        </if>
+    </select>
+    <select id="queryAllRowsInDept" resultType="int">
+        select count(id) from holiday where departmentid=#{departmentid}
+    </select>
+
+    <!--查询申请表包含搜索-->
+    <select id="queryHolidayHistory" resultType="Holidayinfo" parameterType="map">
+        select * from holiday where userid=#{userid} and type LIKE trim(replace(CONCAT('%',#{type},'%'),' ',''))
+        <if test="page !=null and limit !=null">
+            limit #{page} , #{limit}
+        </if>
+    </select>
+    <select id="queryHistoryRows" resultType="int">
+        select count(id) from holiday where userid=#{userid}
+    </select>
+    <select id="querySecond" resultType="Holidayinfo" parameterType="map">
+        select * from holiday where state = 1 and username LIKE trim(replace(CONCAT('%',#{name},'%'),' ',''))ORDER BY FIELD(isApply, 0, 1, 2)
+        <if test="page !=null and limit !=null">
+            limit #{page} , #{limit}
+        </if>
+    </select>
+    <select id="querySecondRows" resultType="int">
+        select count(*) from holiday where state = 1
+    </select>
+    <update id="updateIsApply">
+        update holiday set isApply = #{isApply} where id=#{id}
+    </update>
+</mapper>

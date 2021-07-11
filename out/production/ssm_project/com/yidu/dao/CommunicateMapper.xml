@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yidu.dao.CommunicateMapper" >
+    <select id="selectAll" resultType="Communicateinfo">
+        select * from communicate
+    </select>
+    <select id="queryAllComm" resultType="Communicateinfo" parameterType="map">
+        select * from communicate where title LIKE trim(replace(CONCAT('%',#{name},'%'),' ',''))
+        <if test="page !=null and limit !=null">
+            limit #{page} , #{limit}
+        </if>
+    </select>
+    <select id="queryAllRows" resultType="int">
+        select count(comid) from communicate
+    </select>
+    <select id="selectUserNameByUserId" resultType="java.lang.String" parameterType="int">
+        select username from userinfo where userid = #{userid}
+    </select>
+    <select id="selectRoomNameByRoomId" resultType="java.lang.String" parameterType="int">
+        select roomname from room where roomid = #{roomid}
+    </select>
+    <insert id="insertMessage" parameterType="Communicateinfo">
+    insert into communicate(comid,roomid,userid,title,starttime,endtime) values (null,#{roomid},#{userid},#{title},#{starttime},#{endtime})
+    </insert>
+    <update id="updateMessage" parameterType="Communicateinfo">
+        update communicate set roomid=#{roomid},userid=#{userid},title=#{title},starttime=#{starttime},endtime=#{endtime} where comid=#{comid}
+    </update>
+    <update id="updateCommunicateState" >
+        update communicate set state=#{state} where comid=#{comid}
+    </update>
+    <select id="selectRoomIsApply" resultType="int">
+        select isapply from communicate,room where room.roomid = communicate.roomid and communicate.comid = #{comid}
+    </select>
+    <update id="updateIsRoomApplyState">
+        update room,communicate set isapply = #{isapply}  where room.roomid = communicate.roomid and communicate.comid = #{comid}
+    </update>
+    <select id="queryMineComm" resultType="Communicateinfo" parameterType="map">
+        select * from communicate where userid=#{userid} and title LIKE trim(replace(CONCAT('%',#{name},'%'),' ',''))
+        <if test="page !=null and limit !=null">
+            limit #{page} , #{limit}
+        </if>
+    </select>
+    <select id="queryMineRows" resultType="int">
+        select count(comid) from communicate where userid=#{userid}
+    </select>
+</mapper>
